@@ -2,16 +2,7 @@ public class Palindrome {
 
 	public static void main(String[] args) {
 
-		assertEquals( isPalindrome(""), true );
-		assertEquals( isPalindrome("a"), true );
-		assertEquals( isPalindrome("aaaaaa"), true );
-		assertEquals( isPalindrome("aba"), true );
-		assertEquals( isPalindrome("abba"), true );
-		assertEquals( isPalindrome("abcdcba"), true );
-		assertEquals( isPalindrome("baba"), false );
-		assertEquals( isPalindrome("ba"), false );
-
-		System.out.println("All tests OK!");
+		runTests();
 	}
 
 	/**
@@ -26,6 +17,22 @@ public class Palindrome {
 		return true;
 	}
 
+
+	// --- tests ---
+
+	private static void runTests() {
+
+		assertEquals( isPalindrome(""), true );
+		assertEquals( isPalindrome("a"), true );
+		assertEquals( isPalindrome("aaaaaa"), true );
+		assertEquals( isPalindrome("aba"), true );
+		assertEquals( isPalindrome("abba"), true );
+		assertEquals( isPalindrome("abcdcba"), true );
+		assertEquals( isPalindrome("baba"), false );
+		assertEquals( isPalindrome("ba"), false );
+
+		System.out.println("All tests OK!");
+	}
 
 	/**
 	 * Checks that the actual value we have is equal to the one we expect.

@@ -4,34 +4,9 @@ import java.util.*;
 
 public class TopPhrases {
 
-	public static void main(String[] args) throws FileNotFoundException {
-		
-		// one phrase
-		assertEquals( topPhrases(1, fromStr("a")), Arrays.asList(
-			new Phrase("a", 1)
-		));
+	public static void main(String[] args) throws Exception {
 
-		// multiple phrases
-		assertEquals( topPhrases(2, fromStr("a a a a b b c")), Arrays.asList(
-			new Phrase("a", 4), new Phrase("b", 2)
-		));
-
-		// n is greater than number of different phrases
-		assertEquals( topPhrases(5, fromStr("a a a b b c")), Arrays.asList(
-			new Phrase("a", 3), new Phrase("b", 2), new Phrase("c", 1)
-		));
-
-		// unsorted words
-		assertEquals( topPhrases(3, fromStr("c a b a a d a d a b b c e b c")), Arrays.asList(
-			new Phrase("a", 5), new Phrase("b", 4), new Phrase("c", 3)
-		));
-
-		// Read from file, using " | " or "\n" as delimiter for phrases.
-		// The result is not tested, just shown.
-		final List<Phrase> phrases = topPhrases(10, fromFile("tests/TopPhrases.txt", " \\| |\n"));
-		System.out.println("Top phases: " + phrases);
-
-		System.out.println("All tests OK!");
+		runTests();
 	}
 
 	/**
@@ -224,6 +199,37 @@ public class TopPhrases {
 		}
 	}
 
+
+	// --- tests ---
+
+	private static void runTests() throws Exception {
+		// one phrase
+		assertEquals( topPhrases(1, fromStr("a")), Arrays.asList(
+			new Phrase("a", 1)
+		));
+
+		// multiple phrases
+		assertEquals( topPhrases(2, fromStr("a a a a b b c")), Arrays.asList(
+			new Phrase("a", 4), new Phrase("b", 2)
+		));
+
+		// n is greater than number of different phrases
+		assertEquals( topPhrases(5, fromStr("a a a b b c")), Arrays.asList(
+			new Phrase("a", 3), new Phrase("b", 2), new Phrase("c", 1)
+		));
+
+		// unsorted words
+		assertEquals( topPhrases(3, fromStr("c a b a a d a d a b b c e b c")), Arrays.asList(
+			new Phrase("a", 5), new Phrase("b", 4), new Phrase("c", 3)
+		));
+
+		// Read from file, using " | " or "\n" as delimiter for phrases.
+		// The result is not tested, just shown.
+		final List<Phrase> phrases = topPhrases(10, fromFile("tests/TopPhrases.txt", " \\| |\n"));
+		System.out.println("Top phases: " + phrases);
+
+		System.out.println("All tests OK!");
+	}
 
 	/**
 	 * Checks that the actual value we have is equal to the one we expect.

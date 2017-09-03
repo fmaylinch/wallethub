@@ -4,34 +4,7 @@ public class ComplementaryPairs {
 
 	public static void main(String[] args) {
 
-		// Simple array
-		assertEquals( findKComplementaryPairs(6, new int[]{1, 2, 3, 4, 5}),
-			Arrays.asList(
-				pair(0,4), pair(1,3)));
-
-		// No pairs, array is empty
-		assertEquals( findKComplementaryPairs(3, new int[]{}),
-			Collections.emptyList());
-
-		// No pairs, K is too high
-		assertEquals( findKComplementaryPairs(6, new int[]{1, 2, 3}),
-			Collections.emptyList());
-
-		// No pairs, K is too low
-		assertEquals( findKComplementaryPairs(2, new int[]{1, 2, 3}),
-			Collections.emptyList());
-
-		// All combinations of repeated values
-		assertEquals( findKComplementaryPairs(2, new int[]{1, 1, 1, 1}),
-			Arrays.asList(
-				pair(0,1), pair(0,2), pair(0,3), pair(1,2), pair(1,3), pair(2,3)));
-
-		// Test more complex and unsorted array (it is sorted by the method anyway)
-		assertEquals( findKComplementaryPairs(10, new int[]{8, 6, 2, 5, 10, 1, 4, 5, 8, 5}),
-			Arrays.asList(
-				pair(0,2), pair(1,6), pair(2,8), pair(3,7), pair(3,9), pair(7,9)));
-
-		System.out.println("All tests OK!");
+		runTests();
 	}
 
 	/**
@@ -177,6 +150,39 @@ public class ComplementaryPairs {
 		}
 	}
 
+
+	// --- tests ---
+
+	private static void runTests() {
+		// Simple array
+		assertEquals( findKComplementaryPairs(6, new int[]{1, 2, 3, 4, 5}),
+			Arrays.asList(
+				pair(0,4), pair(1,3)));
+
+		// No pairs, array is empty
+		assertEquals( findKComplementaryPairs(3, new int[]{}),
+			Collections.emptyList());
+
+		// No pairs, K is too high
+		assertEquals( findKComplementaryPairs(6, new int[]{1, 2, 3}),
+			Collections.emptyList());
+
+		// No pairs, K is too low
+		assertEquals( findKComplementaryPairs(2, new int[]{1, 2, 3}),
+			Collections.emptyList());
+
+		// All combinations of repeated values
+		assertEquals( findKComplementaryPairs(2, new int[]{1, 1, 1, 1}),
+			Arrays.asList(
+				pair(0,1), pair(0,2), pair(0,3), pair(1,2), pair(1,3), pair(2,3)));
+
+		// Test more complex and unsorted array (it is sorted by the method anyway)
+		assertEquals( findKComplementaryPairs(10, new int[]{8, 6, 2, 5, 10, 1, 4, 5, 8, 5}),
+			Arrays.asList(
+				pair(0,2), pair(1,6), pair(2,8), pair(3,7), pair(3,9), pair(7,9)));
+
+		System.out.println("All tests OK!");
+	}
 
 	/**
 	 * Checks that the actual value we have is equal to the one we expect.
