@@ -154,6 +154,7 @@ public class ComplementaryPairs {
 	// --- tests ---
 
 	private static void runTests() {
+
 		// Simple array
 		assertEquals( findKComplementaryPairs(6, new int[]{1, 2, 3, 4, 5}),
 			Arrays.asList(

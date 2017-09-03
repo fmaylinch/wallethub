@@ -203,6 +203,7 @@ public class TopPhrases {
 	// --- tests ---
 
 	private static void runTests() throws Exception {
+
 		// one phrase
 		assertEquals( topPhrases(1, fromStr("a")), Arrays.asList(
 			new Phrase("a", 1)
@@ -223,12 +224,13 @@ public class TopPhrases {
 			new Phrase("a", 5), new Phrase("b", 4), new Phrase("c", 3)
 		));
 
+		System.out.println("All tests OK!");
+
+
 		// Read from file, using " | " or "\n" as delimiter for phrases.
 		// The result is not tested, just shown.
 		final List<Phrase> phrases = topPhrases(10, fromFile("tests/TopPhrases.txt", " \\| |\n"));
 		System.out.println("Top phases: " + phrases);
-
-		System.out.println("All tests OK!");
 	}
 
 	/**
