@@ -35,8 +35,9 @@ public class TopPhrases {
 	}
 
 	/**
-	 * Reads phrases from {@link PhraseReader} and returns
-	 * the n most frequent ones, sorted by frequency (from most frequent).
+	 * Reads phrases from {@link PhraseReader} and
+	 * returns the n most frequent ones (if available),
+	 * sorted by frequency (from most frequent).
 	 *
 	 * Time efficiency: O(n)
 	 * Space efficiency: O(n)
@@ -47,9 +48,54 @@ public class TopPhrases {
 
 		final List<Phrase>[] phrasesByFreq = arrangePhrasesByFrequency(counts);
 
-		final List<Phrase> result = new ArrayList<>();
+		return getTopPhrases(n, phrasesByFreq);
+	}
 
-		// Now we collect phrases starting from those with the highest frequency
+	/**
+	 * Reads phrases from the given {@link PhraseReader} and
+	 * returns a {@link PhraseCounts} object with the frequency of each phrase.
+	 */
+	private static PhraseCounts countPhrases(PhraseReader reader) {
+
+		final PhraseCounts result = new PhraseCounts();
+
+		String phrase;
+		while( (phrase = reader.nextPhrase()) != null ) {
+			result.addPhrase(phrase);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Returns an array indexed by frequency from the {@link PhraseCounts}.
+	 * In each position there's a list with the phrases that have that frequency.
+	 * phrasesByFreq[k] is a list of phrases with frequency k (or null if
+	 * there are no phrases with that frequency).
+	 */
+	private static List<Phrase>[] arrangePhrasesByFrequency(PhraseCounts counts) {
+
+		@SuppressWarnings("unchecked")
+		final List<Phrase>[] result = new List[counts.getMaxCount() + 1];
+
+		for (Phrase phrase : counts.getPhrases()) {
+			if (result[phrase.frequency] == null) {
+				result[phrase.frequency] = new ArrayList<>();
+			}
+			result[phrase.frequency].add(phrase);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Returns n phrases (if available) starting from those with the highest frequency.
+	 *
+	 * @param phrasesByFreq array where each index k contains a list of phrases with frequency k
+	 */
+	private static List<Phrase> getTopPhrases(int n, List<Phrase>[] phrasesByFreq)
+	{
+		final List<Phrase> result = new ArrayList<>();
 
 		int freq = phrasesByFreq.length - 1;
 
@@ -74,42 +120,6 @@ public class TopPhrases {
 	}
 
 
-	/**
-	 * Returns an array indexed by frequency from the {@link PhraseCounts}.
-	 * In each position there's a list with the phrases that have that frequency.
-	 * phrasesByFreq[k] is a list of phrases with frequency k (or null if
-	 * there are no phrases with that frequency).
-	 */
-	private static List<Phrase>[] arrangePhrasesByFrequency(PhraseCounts counts) {
-
-		@SuppressWarnings("unchecked")
-		final List<Phrase>[] result = new List[counts.getMaxCount() + 1];
-
-		for (Phrase phrase : counts.getPhrases()) {
-			if (result[phrase.frequency] == null) {
-				result[phrase.frequency] = new ArrayList<>();
-			}
-			result[phrase.frequency].add(phrase);
-		}
-
-		return result;
-	}
-
-	/**
-	 * Reads phrases from the given {@link PhraseReader} and
-	 * returns a {@link PhraseCounts} object with the frequency of each phrase.
-	 */
-	private static PhraseCounts countPhrases(PhraseReader reader) {
-
-		final PhraseCounts result = new PhraseCounts();
-
-		String phrase;
-		while( (phrase = reader.nextPhrase()) != null ) {
-			result.addPhrase(phrase);
-		}
-
-		return result;
-	}
 
 	/** Reads phases from a file, using the provided separator regex to split phrases */
 	private static PhraseReader fromFile(String filePath, String separator) throws FileNotFoundException {
