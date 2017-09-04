@@ -11,47 +11,57 @@ public class ComplementaryPairs {
 	 * Returns K-complementary pairs in a given array of integers.
 	 * Given Array A, pair (i, j) is K-complementary if K = A[i] + A[j].
 	 *
-	 * The returned pairs are sorted, first by the left index and then by the second.
-	 * In each pair, the first index is always lower than the second index.
+	 * In each pair returned, the first index is always lower than the second index.
 	 *
 	 * Time efficiency: O(n * log n)
 	 * Space efficiency: O(n)
 	 */
 	public static List<IntPair> findKComplementaryPairs(int k, int[] a) {
 
-		final IndexedInt[] a2 = indexed(a);
+		final IndexedInt[] indexed = indexed(a);
 
 		// Sort by value
-		Arrays.sort(a2, Comparator.comparingInt(p -> p.value));
+		Arrays.sort(indexed, Comparator.comparingInt(p -> p.value));
+
+		return findKComplementaryPairs(k, indexed);
+	}
+
+	/**
+	 * Returns K-complementary pairs given an array of {@link IndexedInt} sorted by value.
+	 * Given Array A, pair (i, j) is K-complementary if K = A[i] + A[j].
+	 *
+	 * In each pair returned, the first index is always lower than the second index.
+	 */
+	private static List<IntPair> findKComplementaryPairs(int k, IndexedInt[] a) {
 
 		// Start looking for pairs from the extremes
-		int left = 0;              // this index starts at min value
-		int right = a2.length - 1; // this index starts at max value
+		int lower = 0;            // this index starts at min value
+		int upper = a.length - 1; // this index starts at max value
 
 		final List<IntPair> result = new ArrayList<>();
 
-		while (left < right) {
+		while (lower < upper) {
 
-			final int sum = a2[left].value + a2[right].value;
+			final int sum = a[lower].value + a[upper].value;
 
 			if (sum > k) {
-				right--; // sum is too high, move to a lower value from the right
+				upper--; // sum is too high, move to a lower value
 
 			} else if (sum < k){
-				left++; // sum is too low, move to a higher value from the left
+				lower++; // sum is too low, move to a higher value
 
 			} else {  // (sum == k)
 
-				if (a2[left].value != a2[right].value) {
+				if (a[lower].value != a[upper].value) {
 
-					// Add result with first index always lower that the second index
-					result.add(sortedPair(a2[left].index, a2[right].index));
+					// Add result with first index always lower than the second index
+					result.add(sortedPair(a[lower].index, a[upper].index));
 
 					// Try to move to a similar value, to find another pair
-					if (a2[left].value == a2[left+1].value) {
-						left++;
+					if (a[lower].value == a[lower+1].value) {
+						lower++;
 					} else {
-						right--;
+						upper--;
 					}
 
 				} else {
@@ -59,9 +69,9 @@ public class ComplementaryPairs {
 					// If both values are the same, all the values in the middle
 					// are the same so add all possible index combinations and exit loop
 
-					for (int i = left; i < right ; i++) {
-						for (int j = i+1; j <= right; j++) {
-							result.add(pair(a2[i].index, a2[j].index));
+					for (int i = lower; i < upper ; i++) {
+						for (int j = i+1; j <= upper; j++) {
+							result.add(pair(a[i].index, a[j].index));
 						}
 					}
 					break;
