@@ -70,8 +70,6 @@ public class ComplementaryPairs {
 			}
 		}
 
-		Collections.sort(result);
-
 		return result;
 	}
 
@@ -156,29 +154,29 @@ public class ComplementaryPairs {
 	private static void runTests() {
 
 		// Simple array
-		assertEquals( findKComplementaryPairs(6, new int[]{1, 2, 3, 4, 5}),
+		assertEqualElements( findKComplementaryPairs(6, new int[]{1, 2, 3, 4, 5}),
 			Arrays.asList(
 				pair(0,4), pair(1,3)));
 
 		// No pairs, array is empty
-		assertEquals( findKComplementaryPairs(3, new int[]{}),
+		assertEqualElements( findKComplementaryPairs(3, new int[]{}),
 			Collections.emptyList());
 
 		// No pairs, K is too high
-		assertEquals( findKComplementaryPairs(6, new int[]{1, 2, 3}),
+		assertEqualElements( findKComplementaryPairs(6, new int[]{1, 2, 3}),
 			Collections.emptyList());
 
 		// No pairs, K is too low
-		assertEquals( findKComplementaryPairs(2, new int[]{1, 2, 3}),
+		assertEqualElements( findKComplementaryPairs(2, new int[]{1, 2, 3}),
 			Collections.emptyList());
 
 		// All combinations of repeated values
-		assertEquals( findKComplementaryPairs(2, new int[]{1, 1, 1, 1}),
+		assertEqualElements( findKComplementaryPairs(2, new int[]{1, 1, 1, 1}),
 			Arrays.asList(
 				pair(0,1), pair(0,2), pair(0,3), pair(1,2), pair(1,3), pair(2,3)));
 
 		// Test more complex and unsorted array (it is sorted by the method anyway)
-		assertEquals( findKComplementaryPairs(10, new int[]{8, 6, 2, 5, 10, 1, 4, 5, 8, 5}),
+		assertEqualElements( findKComplementaryPairs(10, new int[]{8, 6, 2, 5, 10, 1, 4, 5, 8, 5}),
 			Arrays.asList(
 				pair(0,2), pair(1,6), pair(2,8), pair(3,7), pair(3,9), pair(7,9)));
 
@@ -186,13 +184,20 @@ public class ComplementaryPairs {
 	}
 
 	/**
-	 * Checks that the actual value we have is equal to the one we expect.
-	 * In case they are different, throws an exception.
+	 * Checks that the actual list contains the same elements as the one we expect.
+	 * Lists elements are compared after sorting so actual order is not important.
+	 * In case lists are different (after being sorted), throws an exception.
 	 */
-	public static void assertEquals(Object actual, Object expected) {
+	public static <T extends Comparable<T>> void assertEqualElements(List<T> actual, List<T> expected) {
 
-		if (!actual.equals(expected)) {
-			throw new RuntimeException("Actual value " + actual + " is not equal to expected value " + expected);
+		final ArrayList<T> actualSorted = new ArrayList<>(actual);
+		Collections.sort(actualSorted);
+
+		final ArrayList<T> expectedSorted = new ArrayList<>(expected);
+		Collections.sort(expectedSorted);
+
+		if (!actualSorted.equals(expectedSorted)) {
+			throw new RuntimeException("Actual list (sorted) " + actualSorted + " is not equal to expected list (sorted) " + expectedSorted);
 		}
 	}
 }
