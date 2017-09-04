@@ -2,7 +2,14 @@
 DELIMITER $$
 
 
--- Helper function to split a string
+-- Splits a string by delimiter and returns the part at the given position,
+-- or NULL if there is no such position.
+--
+--   split_string('aa|bbb|c', '|', 1) returns 'aa'
+--   split_string('aa|bbb|c', '|', 2) returns 'bbb'
+--   split_string('aa|bbb|c', '|', 3) returns 'c'
+--   split_string('aa|bbb|c', '|', 4) returns NULL
+--
 CREATE FUNCTION split_string(str VARCHAR(255), delimiter VARCHAR(10), pos INT)
 RETURNS VARCHAR(255)
 DETERMINISTIC
@@ -18,6 +25,7 @@ END $$
 
 
 -- Reads sometbl and returns split rows in temporary table sometbl_split
+--
 CREATE PROCEDURE split_rows()
 BEGIN
   DECLARE i INT;
