@@ -1,50 +1,54 @@
 
-DELIMITER $$
-
-
--- Splits a string by delimiter and returns the part at the given position,
--- or NULL if there is no such position.
---
---   split_string('aa|bbb|c', '|', 1) returns 'aa'
---   split_string('aa|bbb|c', '|', 2) returns 'bbb'
---   split_string('aa|bbb|c', '|', 3) returns 'c'
---   split_string('aa|bbb|c', '|', 4) returns NULL
---   split_string('', '|', *); returns NULL     (for any index)
---
-CREATE FUNCTION split_string(str VARCHAR(255), delimiter VARCHAR(10), pos INT)
-RETURNS VARCHAR(255)
-DETERMINISTIC
-BEGIN
-  DECLARE output VARCHAR(255);
-  SET output = REPLACE(SUBSTRING(SUBSTRING_INDEX(str, delimiter, pos)
-                 , LENGTH(SUBSTRING_INDEX(str, delimiter, pos - 1)) + 1)
-                 , delimiter
-                 , '');
-  IF output = '' THEN SET output = null; END IF;
-  RETURN output;
-END $$
-
-
 -- Reads some_table and returns split rows in temporary table some_table_split
 --
-CREATE PROCEDURE split_rows()
+CREATE PROCEDURE split_rows(delimiter VARCHAR(10))
 BEGIN
-  DECLARE i INT;
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE id1 INT;
+  DECLARE len INT;
+  DECLARE delim_len INT;
+  DECLARE name1 VARCHAR(50);
+  DECLARE part VARCHAR(50);
+  DECLARE cur CURSOR FOR SELECT id, name FROM some_table;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
-  SET i = 1;
+  SET delim_len = CHAR_LENGTH(delimiter);
 
+  -- output table
   DROP TABLE IF EXISTS some_table_split;
   CREATE TEMPORARY TABLE some_table_split ( ID INT, NAME VARCHAR(50) );
 
-  REPEAT
-    INSERT INTO some_table_split (id, name)
-      SELECT id, split_string(name, '|', i) FROM some_table
-      WHERE split_string(name, '|', i) IS NOT NULL;
-    SET i = i + 1;
-    UNTIL ROW_COUNT() = 0
-  END REPEAT;
-  SELECT * FROM some_table_split order by id;
-END $$
+  OPEN cur;
+  read_loop: LOOP
 
+    -- get data from original table
+    FETCH cur INTO id1, name1;
+    IF done THEN
+      LEAVE read_loop;
+    END IF;
 
-DELIMITER ;
+    REPEAT
+
+      -- extract part of name
+      SET part = SUBSTRING_INDEX(name1, delimiter, 1);
+      SET len = CHAR_LENGTH(part) + delim_len + 1;
+
+      -- remove extracted part
+      SET name1 = SUBSTRING(name1, len);
+
+      -- if the part is not empty, insert into result table
+      IF CHAR_LENGTH(part) THEN
+        INSERT INTO some_table_split (id, name) VALUES(id1, part);
+      END IF;
+
+      -- until there's no more to extract
+    UNTIL CHAR_LENGTH(name1) = 0
+
+    END REPEAT;
+
+  END LOOP;
+  CLOSE cur;
+
+  SELECT * FROM some_table_split;
+
+END;
