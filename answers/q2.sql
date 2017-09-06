@@ -19,15 +19,16 @@ BEGIN
     RETURN input;
   END IF;
 
+  SET input = LOWER(input);
   SET output = UPPER(LEFT(input,1)); -- first upper char
   SET i = 2; -- skip first char, already added
 
   WHILE (i <= len) DO
 
-    -- add lower char
-    SET output = CONCAT(output, LOWER(MID(input,i,1)));
+    -- add char (already in lower case)
+    SET output = CONCAT(output, MID(input,i,1));
 
-        -- add upper char after space
+    -- add upper char after space
     IF (MID(input,i,1) = ' ' AND i < len) THEN
       SET i = i + 1;
       SET output = CONCAT(output, UPPER(MID(input,i,1)));

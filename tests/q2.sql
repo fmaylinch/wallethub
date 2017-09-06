@@ -17,7 +17,8 @@ SELECT title_case('');
 SELECT title_case(NULL);
 -- output: NULL
 
-SELECT title_case('this IS a complEX senTEnce, just 1,   that''s capitalizeD!!');
--- output: 'This Is A Complex Sentence, Just 1,   That\'s Capitalized!!'
+SELECT title_case('this IS a 10n9 senTEnce,  that''s capitalizeD!! ');
+-- output: 'This Is A 10n9 Sentence,  that\'s Capitalized!! '
+
 
 
