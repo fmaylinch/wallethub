@@ -1,31 +1,41 @@
 
--- Converts input to 'Title Case'
-CREATE FUNCTION TITLE_CASE (input VARCHAR(255))
+-- Returns input in 'Title Case'
+CREATE FUNCTION title_case (input VARCHAR(255))
 
 RETURNS VARCHAR(255)
 
 DETERMINISTIC
 
 BEGIN
-	DECLARE len INT;
-	DECLARE i INT;
+  DECLARE len INT;
+  DECLARE i INT;
+  
+  DECLARE output VARCHAR(255);
 
-	SET len   = CHAR_LENGTH(input);
-	SET input = LOWER(input);
-	SET i = 0;
+  SET len = CHAR_LENGTH(input);
 
-	WHILE (i < len) DO
-		IF (MID(input,i,1) = ' ' OR i = 0) THEN
-			IF (i < len) THEN
-				SET input = CONCAT(
-					LEFT(input,i),
-					UPPER(MID(input,i + 1,1)),
-					RIGHT(input,len - i - 1)
-				);
-			END IF;
-		END IF;
-		SET i = i + 1;
-	END WHILE;
+  -- don't do anything with empty string
+  IF len = 0 THEN
+    RETURN input;
+  END IF;
 
-	RETURN input;
+  SET output = UPPER(LEFT(input,1)); -- first upper char
+  SET i = 2; -- skip first char, already added
+
+  WHILE (i <= len) DO
+
+    -- add lower char
+    SET output = CONCAT(output, LOWER(MID(input,i,1)));
+
+        -- add upper char after space
+    IF (MID(input,i,1) = ' ' AND i < len) THEN
+      SET i = i + 1;
+      SET output = CONCAT(output, UPPER(MID(input,i,1)));
+    END IF;
+
+    SET i = i + 1;
+
+  END WHILE;
+
+  RETURN output;
 END;
