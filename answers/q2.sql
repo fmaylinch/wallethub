@@ -1,4 +1,7 @@
 
+-- I guess this has efficiency of O(n^2) because I suppose the string handling
+--  needs to be traversed in each iteration of my WHILE loop.
+
 -- Returns input in 'Title Case'
 CREATE FUNCTION title_case (input VARCHAR(255))
 

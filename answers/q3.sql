@@ -1,4 +1,7 @@
 
+-- I assume an efficiency of O(n) if we consider that
+--   there is a limited number of splits in each row.
+
 -- Reads some_table and returns split rows in temporary table some_table_split
 --
 CREATE PROCEDURE split_rows(delimiter VARCHAR(10))
