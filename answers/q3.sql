@@ -9,6 +9,7 @@ DELIMITER $$
 --   split_string('aa|bbb|c', '|', 2) returns 'bbb'
 --   split_string('aa|bbb|c', '|', 3) returns 'c'
 --   split_string('aa|bbb|c', '|', 4) returns NULL
+--   split_string('', '|', *); returns NULL     (for any index)
 --
 CREATE FUNCTION split_string(str VARCHAR(255), delimiter VARCHAR(10), pos INT)
 RETURNS VARCHAR(255)
@@ -24,23 +25,25 @@ BEGIN
 END $$
 
 
--- Reads sometbl and returns split rows in temporary table sometbl_split
+-- Reads some_table and returns split rows in temporary table some_table_split
 --
 CREATE PROCEDURE split_rows()
 BEGIN
   DECLARE i INT;
 
   SET i = 1;
-  DROP TABLE IF EXISTS sometbl_split;
-  CREATE TEMPORARY TABLE sometbl_split ( ID INT, NAME VARCHAR(50) );
+
+  DROP TABLE IF EXISTS some_table_split;
+  CREATE TEMPORARY TABLE some_table_split ( ID INT, NAME VARCHAR(50) );
+
   REPEAT
-    INSERT INTO sometbl_split (id, name)
-      SELECT id, split_string(name, '|', i) FROM sometbl
+    INSERT INTO some_table_split (id, name)
+      SELECT id, split_string(name, '|', i) FROM some_table
       WHERE split_string(name, '|', i) IS NOT NULL;
     SET i = i + 1;
     UNTIL ROW_COUNT() = 0
   END REPEAT;
-  SELECT * FROM sometbl_split order by id;
+  SELECT * FROM some_table_split order by id;
 END $$
 
 
